@@ -4,15 +4,8 @@
  */
 package com.dkord;
 
-import com.dkord.addon.BlackboardLocal;
-import com.dkord.navigation.NavigateEvent;
-import com.dkord.navigation.NavigateListener;
-import com.dkord.pages.admin.AdminViewLocal;
-import com.dkord.pages.security.LoginViewLocal;
-import com.dkord.pages.security.RegisterViewLocal;
-import com.github.wolfie.blackboard.Blackboard;
+import com.dkord.pages.security.LoginLayout;
 import com.vaadin.Application;
-import com.vaadin.navigator.Navigator;
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.MenuBar;
@@ -32,16 +25,7 @@ import javax.ejb.Stateful;
 public class DeliveryAppRootBean extends Root implements DeliveryAppRootLocal {
 
     @EJB
-    private LoginViewLocal loginView;
-
-    @EJB
-    private RegisterViewLocal registerView;
-
-    @EJB
-    private AdminViewLocal adminView;
-
-    @EJB
-    private BlackboardLocal blackboard;
+    EJBAccessLocal ejbAccess;
 
     @Override
     public Root getAppRoot() {
@@ -50,47 +34,7 @@ public class DeliveryAppRootBean extends Root implements DeliveryAppRootLocal {
 
     @Override
     protected void init(WrappedRequest request) {
-        Panel contentPanel = new Panel();
-
-        VerticalLayout layout = new VerticalLayout();
-        layout.setSizeFull();
-        Panel mainPanel = new Panel();
-        MenuBar bar = new MenuBar();
-
-        layout.addComponent(bar);
-        layout.addComponent(contentPanel);
-        mainPanel.addComponent(layout);
-        setContent(mainPanel);
-        ((VerticalLayout) mainPanel.getContent()).setComponentAlignment(
-                layout, Alignment.TOP_CENTER);
+        setContent(new LoginLayout(ejbAccess));
         setSizeFull();
-        final Navigator mainNavigator = new Navigator(contentPanel);
-
-        mainNavigator.addView("Login", loginView.getView());
-        mainNavigator.addView("Register", registerView.getView());
-        mainNavigator.addView("Admin", adminView.getView());
-
-        blackboard.setBlackboard(new Blackboard());
-        blackboard.register(NavigateListener.class, NavigateEvent.class);
-        blackboard.addListener(new NavigateListener() {
-            @Override
-            public void navigate(NavigateEvent event) {
-                mainNavigator.navigateTo(event.getNavigateTo());
-            }
-        });
-
-        bar.addItem("Login", new Command() {
-            @Override
-            public void menuSelected(MenuItem selectedItem) {
-                blackboard.fire(new NavigateEvent("Login"));
-            }
-        });
-        bar.addItem("LoginOut", new Command() {
-            @Override
-            public void menuSelected(MenuItem selectedItem) {
-                Application.getCurrent().close();
-            }
-        });
-
     }
 }

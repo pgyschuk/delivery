@@ -1,13 +1,10 @@
 package com.dkord.pages.security;
 
-import com.dkord.RolesServiceLocal;
-import com.dkord.UsersServiceLocal;
-import com.dkord.addon.BlackboardLocal;
+import com.dkord.EJBAccessLocal;
 import com.dkord.datamodel.Role;
 import com.dkord.datamodel.User;
 import com.dkord.navigation.NavigateEvent;
-import com.dkord.security.DeliveryAuthenticationManagerLocal;
-import com.dkord.validation.TextFieldValidatorLocal;
+import com.dkord.pages.admin.AdminLayout;
 import com.vaadin.Application;
 import com.vaadin.data.validator.AbstractStringValidator;
 import com.vaadin.data.validator.EmailValidator;
@@ -17,52 +14,20 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.PasswordField;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
-import javax.annotation.Resource;
-import javax.ejb.EJB;
-import javax.ejb.SessionContext;
-import javax.ejb.Stateful;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-@Stateful
-public class LoginView extends VerticalLayout implements LoginViewLocal {
+public class LoginLayout extends VerticalLayout{
 
-    private static Logger LOGGER = LoggerFactory.getLogger(LoginView.class);
+    private static Logger LOGGER = LoggerFactory.getLogger(LoginLayout.class);
 
-    @EJB
-    private DeliveryAuthenticationManagerLocal authenticationManager;
-
-    @EJB
-    private TextFieldValidatorLocal textFieldValidator;
-
-    @EJB
-    private UsersServiceLocal usersService;
-
-    @EJB
-    private RolesServiceLocal rolesService;
-
-    @EJB
-    private BlackboardLocal blackboard;
-    
-    @Resource
-    SessionContext context;
-
-
-    @Override
-    public View getView() {
-        return this;
-    }
-
-    @Override
-    public void navigateTo(String fragmentParameters) {
-    }
-
-    public LoginView() {
+    public LoginLayout(final EJBAccessLocal ejbAccess) {
         super();
         final Panel loginPanel = new Panel();
 
@@ -81,8 +46,8 @@ public class LoginView extends VerticalLayout implements LoginViewLocal {
         password.addValidator(new AbstractStringValidator("Username or password is incorrect") {
             @Override
             protected boolean isValidValue(String value) {
-                User user = usersService.findByEmail(email.getValue());
-                return user != null && usersService.isPasswordValid(user.getPassword(), value);
+                User user = ejbAccess.getUsersService().findByEmail(email.getValue());
+                return user != null && ejbAccess.getUsersService().isPasswordValid(user.getPassword(), value);
             }
         });
         password.setWidth("100%");
@@ -96,16 +61,16 @@ public class LoginView extends VerticalLayout implements LoginViewLocal {
         loginButton.addListener(new Button.ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
-                if (textFieldValidator.isValid(loginPanel.getContent())) {
+                if (ejbAccess.getTextFieldValidator().isValid(loginPanel.getContent())) {
                     final Authentication auth = new UsernamePasswordAuthenticationToken(
                             email.getValue(), password.getValue());
                     try {
-                        Authentication returned = authenticationManager.authenticate(auth);
+                        Authentication returned = ejbAccess.getAuthenticationManager().authenticate(auth);
                         Application.getCurrent().setUser(returned);
                         SecurityContextHolder.getContext().setAuthentication(returned);
                         LOGGER.info("User {} was authenticated", new Object[]{email.getValue()});
-                        if (returned.getAuthorities().contains(rolesService.getRole(Role.Authority.ROLE_ADMIN))) {
-                            blackboard.fire(new NavigateEvent("Admin"));
+                        if (returned.getAuthorities().contains(ejbAccess.getRolesService().getRole(Role.Authority.ROLE_ADMIN))) {
+                            Root.getCurrent().setContent(new AdminLayout(ejbAccess));
                         }
                     } catch (Exception e) {
                         LOGGER.error("User {} was NOT authenticated", new Object[]{email.getValue()});
@@ -118,10 +83,9 @@ public class LoginView extends VerticalLayout implements LoginViewLocal {
         Button registerButton = new Button("Register");
         registerButton.addStyleName("link");
         registerButton.addListener(new Button.ClickListener() {
-
             @Override
             public void buttonClick(ClickEvent event) {
-                blackboard.fire(new NavigateEvent("Register"));
+                Root.getCurrent().setContent(new RegisterLayout(ejbAccess));
             }
         });
 
@@ -133,6 +97,5 @@ public class LoginView extends VerticalLayout implements LoginViewLocal {
         setComponentAlignment(loginPanel, Alignment.MIDDLE_CENTER);
         setSizeFull();
         setMargin(true);
-//        setSizeFull();
     }
 }
