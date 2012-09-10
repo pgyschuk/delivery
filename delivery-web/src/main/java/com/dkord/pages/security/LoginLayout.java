@@ -3,12 +3,11 @@ package com.dkord.pages.security;
 import com.dkord.EJBAccessLocal;
 import com.dkord.datamodel.Role;
 import com.dkord.datamodel.User;
-import com.dkord.navigation.NavigateEvent;
 import com.dkord.pages.admin.AdminLayout;
+import com.dkord.pages.admin.BaseLayout;
 import com.vaadin.Application;
 import com.vaadin.data.validator.AbstractStringValidator;
 import com.vaadin.data.validator.EmailValidator;
-import com.vaadin.navigator.View;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -70,7 +69,7 @@ public class LoginLayout extends VerticalLayout{
                         SecurityContextHolder.getContext().setAuthentication(returned);
                         LOGGER.info("User {} was authenticated", new Object[]{email.getValue()});
                         if (returned.getAuthorities().contains(ejbAccess.getRolesService().getRole(Role.Authority.ROLE_ADMIN))) {
-                            Root.getCurrent().setContent(new AdminLayout(ejbAccess));
+                            Root.getCurrent().setContent(new BaseLayout(new AdminLayout(ejbAccess)));
                         }
                     } catch (Exception e) {
                         LOGGER.error("User {} was NOT authenticated", new Object[]{email.getValue()});
@@ -85,7 +84,7 @@ public class LoginLayout extends VerticalLayout{
         registerButton.addListener(new Button.ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
-                Root.getCurrent().setContent(new RegisterLayout(ejbAccess));
+                Root.getCurrent().setContent(new BaseLayout(new RegisterLayout(ejbAccess)));
             }
         });
 

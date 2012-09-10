@@ -5,8 +5,6 @@
 package com.dkord.datamodel;
 
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.Column;
@@ -29,7 +27,8 @@ import org.hibernate.annotations.NamedQuery;
 @Entity
 @Table(name = "Users")
 @NamedQueries({
-    @NamedQuery(name = "findByEmail", query = "FROM User user WHERE user.email = :email")
+    @NamedQuery(name = "findByEmail", query = "FROM User user WHERE user.email = :email"),
+    @NamedQuery(name = "findAllUsers", query = "FROM User user ORDER BY user.name")
 })
 public class User implements Serializable {
 
@@ -128,5 +127,10 @@ public class User implements Serializable {
 
     public void subtractFromAccount(float quantity) {
         this.account -= quantity;
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 }

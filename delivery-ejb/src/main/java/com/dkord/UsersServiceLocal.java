@@ -6,6 +6,7 @@ package com.dkord;
 
 import com.dkord.datamodel.Role;
 import com.dkord.datamodel.User;
+import java.util.List;
 import javax.ejb.Remote;
 
 /**
@@ -24,4 +25,8 @@ public interface UsersServiceLocal {
     User register(User user);
     
     void addAuthority(User user, Role.Authority authority);
+    
+    boolean hasRole(User user, Role role);
+    
+    List<User> findAll();
 }

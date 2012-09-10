@@ -6,8 +6,6 @@ package com.dkord.datamodel;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -23,7 +21,8 @@ import org.springframework.security.core.GrantedAuthority;
 @Entity
 @Table(name = "Roles")
 @NamedQueries({
-    @NamedQuery(name = "findByAuthority", query = "FROM Role role WHERE role.authority = :authority")
+    @NamedQuery(name = "findByAuthority", query = "FROM Role role WHERE role.authority = :authority"),
+    @NamedQuery(name = "findAllRoles", query = "FROM Role role")
 })
 public class Role implements GrantedAuthority {
     
@@ -81,6 +80,10 @@ public class Role implements GrantedAuthority {
         }
         return true;
     }
-    
+
+    @Override
+    public String toString() {
+        return authority;
+    }
     
 }

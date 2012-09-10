@@ -33,7 +33,7 @@ public class UsersServiceBean implements UsersServiceLocal {
 
     @Override
     public void save(User user) {
-        entityManager.persist(user);
+        entityManager.merge(user);
     }
 
     @Override
@@ -61,5 +61,16 @@ public class UsersServiceBean implements UsersServiceLocal {
         roles.add(role);
         user.setRoles(roles);
         entityManager.merge(user);
+    }
+    
+    @Override
+    public boolean hasRole(User user, Role role) {
+        return user.getRoles().contains(role);
+    }
+
+    @Override
+    public List<User> findAll() {
+        List<User> users = entityManager.createNamedQuery("findAllUsers", User.class).getResultList();
+        return users;
     }
 }

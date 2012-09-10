@@ -1,7 +1,6 @@
 package com.dkord.pages.admin;
 
 import com.dkord.EJBAccessLocal;
-import com.dkord.pages.security.LoginLayout;
 import com.vaadin.navigator.View;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -16,6 +15,7 @@ import com.vaadin.ui.VerticalLayout;
  */
 public class AdminLayout extends VerticalLayout implements View {
 
+    Configuration currentConfiguration;
     public AdminLayout(final EJBAccessLocal ejbAccess) {
         super();
         final Panel adminPanel = new Panel();
@@ -28,25 +28,35 @@ public class AdminLayout extends VerticalLayout implements View {
         menuPanel.setWidth("200px");
         final Panel contentPanel = new Panel();
         contentPanel.setCaption("Options");
-        contentPanel.setWidth("600px");
+        contentPanel.setWidth("660px");
         horizontalLayout.addComponent(menuPanel);
         horizontalLayout.addComponent(contentPanel);
 
-
         VerticalLayout userAction = new VerticalLayout();
 
+        Button saveButton = new Button("Save");
+        saveButton.addListener(new Button.ClickListener() {
+            @Override
+            public void buttonClick(ClickEvent event) {
+                currentConfiguration.save();
+            }
+        });
+        
         Button assignRoleButton = new Button("Assign role");
         assignRoleButton.addStyleName("link");
         assignRoleButton.addListener(new Button.ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
-                contentPanel.setContent(new LoginLayout(ejbAccess));
+                RolesLayout layout = new RolesLayout(ejbAccess);
+                currentConfiguration = layout;
+                contentPanel.setContent(layout);
             }
         });
         userAction.addComponent(assignRoleButton);
 
         menuPanel.addComponent(userAction);
         adminPanel.addComponent(horizontalLayout);
+        adminPanel.addComponent(saveButton);
         addComponent(adminPanel);
         setComponentAlignment(adminPanel, Alignment.MIDDLE_CENTER);
         setMargin(true);

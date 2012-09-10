@@ -3,7 +3,7 @@ package com.dkord.pages.security;
 import com.dkord.EJBAccessLocal;
 import com.dkord.datamodel.Role;
 import com.dkord.datamodel.User;
-import com.dkord.navigation.NavigateEvent;
+import com.dkord.pages.admin.BaseLayout;
 import com.vaadin.data.Validator.InvalidValueException;
 import com.vaadin.data.validator.AbstractStringValidator;
 import com.vaadin.data.validator.EmailValidator;
@@ -87,7 +87,6 @@ public class RegisterLayout extends VerticalLayout implements View {
                     ejbAccess.getUsersService().addAuthority(ejbAccess.getUsersService().register(user), Role.Authority.ROLE_USER);
                     removeComponent(registerPanel);
                     addComponent(new LoginLayout(ejbAccess));
-                    ejbAccess.getBlackboard().fire(new NavigateEvent("Login"));
                 }
             }
         });
@@ -97,7 +96,7 @@ public class RegisterLayout extends VerticalLayout implements View {
         loginButton.addListener(new Button.ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
-                Root.getCurrent().setContent(new LoginLayout(ejbAccess));
+                Root.getCurrent().setContent(new BaseLayout(new LoginLayout(ejbAccess)));
             }
         });
         
@@ -105,7 +104,7 @@ public class RegisterLayout extends VerticalLayout implements View {
         verticalLayout.setComponentAlignment(registerButton, Alignment.MIDDLE_RIGHT);
         verticalLayout.addComponent(loginButton);
 
-        registerPanel.setWidth("800px");
+        registerPanel.setWidth("100%");
         registerPanel.addComponent(verticalLayout);
         addComponent(registerPanel);
         setComponentAlignment(registerPanel, Alignment.MIDDLE_CENTER);

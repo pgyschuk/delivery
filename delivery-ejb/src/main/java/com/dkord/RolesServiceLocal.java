@@ -5,6 +5,7 @@
 package com.dkord;
 
 import com.dkord.datamodel.Role;
+import java.util.List;
 import javax.ejb.Local;
 
 /**
@@ -13,5 +14,8 @@ import javax.ejb.Local;
  */
 @Local
 public interface RolesServiceLocal {
+
     Role getRole(Role.Authority authority);
+
+    List<Role> findAll();
 }

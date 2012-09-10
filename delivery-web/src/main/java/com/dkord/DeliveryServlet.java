@@ -13,18 +13,18 @@ import javax.servlet.http.HttpServletRequest;
  */
 @WebServlet(name="DeliveryServlet", urlPatterns={"/*"})
 public class DeliveryServlet extends AbstractApplicationServlet {
-
-    @EJB(mappedName="com.dkord.DeliveryAppLocal")
-    DeliveryAppLocal deliveryApp;
+    
+    @EJB
+    EJBAccessLocal ejbAccess;
 
     @Override
     protected Class<? extends Application> getApplicationClass() throws ClassNotFoundException {
-        return deliveryApp.getApplication().getClass();
+        return DeliveryApp.class;
     }
 
     @Override
     protected Application getNewApplication(HttpServletRequest request) throws ServletException {
-        return deliveryApp.getApplication();
+        return new DeliveryApp(ejbAccess);
     }
 
    
