@@ -16,6 +16,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
@@ -59,6 +60,9 @@ public class User implements Serializable {
 
     @Column
     private float account;
+    
+    @ManyToOne
+    private Address address;
 
     public User(String name, String email, String password) {
         this.name = name;
@@ -119,6 +123,14 @@ public class User implements Serializable {
 
     public float getAccount() {
         return account;
+    }
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
     }
 
     public void addToAccount(float quantity) {
