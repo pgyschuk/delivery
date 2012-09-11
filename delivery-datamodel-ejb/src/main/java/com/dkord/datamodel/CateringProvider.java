@@ -10,11 +10,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
+import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import org.hibernate.annotations.NamedQueries;
-import org.hibernate.annotations.NamedQuery;
 
 /**
  *
@@ -36,22 +35,22 @@ public class CateringProvider implements Serializable {
     private String name;
 
     @ManyToMany(targetEntity = Role.class, fetch = FetchType.EAGER)
-    @JoinTable(name = "cateringProvider_addressLocation", joinColumns = {
+    @JoinTable(name = "cateringProvider_contactsLocation", joinColumns = {
         @JoinColumn(name = "cateringProviderId", unique = false)
     },
     inverseJoinColumns = {
-        @JoinColumn(name = "addressId", unique = false)
+        @JoinColumn(name = "contactsId", unique = false)
     })
-    private Set<Address> addressLocation;
+    private Set<Contacts> contactsLocation;
     
     @ManyToMany(targetEntity = Role.class, fetch = FetchType.EAGER)
-    @JoinTable(name = "cateringProvider_shippingAddress", joinColumns = {
+    @JoinTable(name = "cateringProvider_shippingContacts", joinColumns = {
         @JoinColumn(name = "cateringProviderId", unique = false)
     },
     inverseJoinColumns = {
-        @JoinColumn(name = "addressId", unique = false)
+        @JoinColumn(name = "contactsId", unique = false)
     })
-    private Set<Address> shippingAddress;
+    private Set<Contacts> shippingContacts;
     
     @ManyToMany(targetEntity = Role.class, fetch = FetchType.EAGER)
     @JoinTable(name = "cateringProvider_menu", joinColumns = {
@@ -61,6 +60,9 @@ public class CateringProvider implements Serializable {
         @JoinColumn(name = "menuId", unique = false)
     })
     private Set<Menu> menus;
+    
+    @Lob 
+    private byte[] logo;
 
     public Long getId() {
         return id;
@@ -78,21 +80,22 @@ public class CateringProvider implements Serializable {
         this.name = name;
     }
 
-    public Set<Address> getAddressLocation() {
-        return addressLocation;
+    public Set<Contacts> getContactsLocation() {
+        return contactsLocation;
     }
 
-    public void setAddressLocation(Set<Address> addressLocation) {
-        this.addressLocation = addressLocation;
+    public void setContactsLocation(Set<Contacts> contactsLocation) {
+        this.contactsLocation = contactsLocation;
     }
 
-    public Set<Address> getShippingAddress() {
-        return shippingAddress;
+    public Set<Contacts> getShippingContacts() {
+        return shippingContacts;
     }
 
-    public void setShippingAddress(Set<Address> shippingAddress) {
-        this.shippingAddress = shippingAddress;
+    public void setShippingContacts(Set<Contacts> shippingContacts) {
+        this.shippingContacts = shippingContacts;
     }
+    
 
     public Set<Menu> getMenus() {
         return menus;
@@ -101,5 +104,13 @@ public class CateringProvider implements Serializable {
     public void setMenus(Set<Menu> menus) {
         this.menus = menus;
     }
-    
+
+    public byte[] getLogo() {
+        return logo;
+    }
+
+    public void setLogo(byte[] logo) {
+        this.logo = logo;
+    }
+        
 }

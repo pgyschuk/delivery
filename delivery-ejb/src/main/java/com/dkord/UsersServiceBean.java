@@ -49,7 +49,6 @@ public class UsersServiceBean implements UsersServiceLocal {
 
     @Override
     public User register(User user) {
-        user.setPassword(passwordEncoder.encodePassword(user.getPassword(), SALT));
         entityManager.persist(user);
         return user;
     }
@@ -62,7 +61,7 @@ public class UsersServiceBean implements UsersServiceLocal {
         user.setRoles(roles);
         entityManager.merge(user);
     }
-    
+
     @Override
     public boolean hasRole(User user, Role role) {
         return user.getRoles().contains(role);

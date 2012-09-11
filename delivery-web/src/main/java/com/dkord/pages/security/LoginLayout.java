@@ -84,7 +84,7 @@ public class LoginLayout extends VerticalLayout{
         registerButton.addListener(new Button.ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
-                Root.getCurrent().setContent(new BaseLayout(new RegisterLayout(ejbAccess)));
+                Root.getCurrent().setContent(new BaseLayout(new RegisterLayout(ejbAccess, new User())));
             }
         });
 

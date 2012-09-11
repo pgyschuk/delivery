@@ -7,6 +7,7 @@ package com.dkord.datamodel;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -28,7 +29,7 @@ import org.hibernate.annotations.NamedQuery;
 @Entity
 @Table(name = "Users")
 @NamedQueries({
-    @NamedQuery(name = "findByEmail", query = "FROM User user WHERE user.email = :email"),
+    @NamedQuery(name = "findByEmail", query = "FROM User user WHERE user.contacts.email = :email"),
     @NamedQuery(name = "findAllUsers", query = "FROM User user ORDER BY user.name")
 })
 public class User implements Serializable {
@@ -50,27 +51,23 @@ public class User implements Serializable {
     @Column
     private String name;
 
-    @Column(unique = true)
-    private String email;
-    
-    private String telephone;
-
     @Column
     private String password;
 
     @Column
     private float account;
     
-    @ManyToOne
-    private Address address;
+    @ManyToOne(cascade= CascadeType.ALL)
+    private Contacts contacts;
 
-    public User(String name, String email, String password) {
+    public User(String name, String password) {
         this.name = name;
-        this.email = email;
         this.password = password;
     }
 
     public User() {
+        this.name = "";
+        this.password = "";
     }
 
     public Long getId() {
@@ -97,24 +94,8 @@ public class User implements Serializable {
         this.name = name;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
     public String getPassword() {
         return password;
-    }
-
-    public String getTelephone() {
-        return telephone;
-    }
-
-    public void setTelephone(String telephone) {
-        this.telephone = telephone;
     }
     
     public void setPassword(String password) {
@@ -125,12 +106,12 @@ public class User implements Serializable {
         return account;
     }
 
-    public Address getAddress() {
-        return address;
+    public Contacts getContacts() {
+        return contacts;
     }
 
-    public void setAddress(Address address) {
-        this.address = address;
+    public void setContacts(Contacts contacts) {
+        this.contacts = contacts;
     }
 
     public void addToAccount(float quantity) {

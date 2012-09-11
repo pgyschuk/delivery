@@ -15,15 +15,15 @@ import org.hibernate.annotations.NamedQuery;
  * @author Peter Gyschuk
  */
 @Entity
-@Table(name = "Addresses")
+@Table(name = "Contacts")
 @NamedQueries({
-    @NamedQuery(name = "findAddressesByCity", query = "FROM Address address WHERE address.city = :city")
+    @NamedQuery(name = "findAddressesByCity", query = "FROM Contacts contacts WHERE contacts.city = :city")
 })
-public class Address implements Serializable {
+public class Contacts implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "addressId")
+    @Column(name = "contactsId")
     private Long id;
 
     @Column
@@ -34,13 +34,31 @@ public class Address implements Serializable {
 
     @Column
     private String number;
+    
+    @Column
+    private String telephone;
 
+    @Column(unique = true)
+    private String email;
+    
     @Column
     private String latitude;
 
     @Column
     private String longitude;
 
+    public Contacts() {
+        this.email = "";
+        this.city = "";
+        this.street = "";
+        this.number = "";
+        this.telephone = "";
+        this.latitude = "";
+        this.longitude = "";
+    }
+
+    
+    
     public Long getId() {
         return id;
     }
@@ -71,6 +89,22 @@ public class Address implements Serializable {
 
     public void setNumber(String number) {
         this.number = number;
+    }
+
+    public String getTelephone() {
+        return telephone;
+    }
+
+    public void setTelephone(String telephone) {
+        this.telephone = telephone;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getLatitude() {
