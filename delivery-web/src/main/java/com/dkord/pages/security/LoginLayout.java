@@ -1,10 +1,12 @@
 package com.dkord.pages.security;
 
+import com.dkord.pages.UserEditLayout;
 import com.dkord.EJBAccessLocal;
 import com.dkord.datamodel.Role;
 import com.dkord.datamodel.User;
-import com.dkord.pages.admin.AdminLayout;
+import com.dkord.pages.admin.MainLayout;
 import com.dkord.pages.admin.BaseLayout;
+import com.dkord.pages.admin.RolesLayout;
 import com.vaadin.Application;
 import com.vaadin.data.validator.AbstractStringValidator;
 import com.vaadin.data.validator.EmailValidator;
@@ -22,7 +24,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-public class LoginLayout extends VerticalLayout{
+public class LoginLayout extends VerticalLayout {
 
     private static Logger LOGGER = LoggerFactory.getLogger(LoginLayout.class);
 
@@ -69,7 +71,7 @@ public class LoginLayout extends VerticalLayout{
                         SecurityContextHolder.getContext().setAuthentication(returned);
                         LOGGER.info("User {} was authenticated", new Object[]{email.getValue()});
                         if (returned.getAuthorities().contains(ejbAccess.getRolesService().getRole(Role.Authority.ROLE_ADMIN))) {
-                            Root.getCurrent().setContent(new BaseLayout(new AdminLayout(ejbAccess)));
+                            Root.getCurrent().setContent(new BaseLayout(ejbAccess, new MainLayout(ejbAccess, new RolesLayout(ejbAccess))));
                         }
                     } catch (Exception e) {
                         LOGGER.error("User {} was NOT authenticated", new Object[]{email.getValue()});
@@ -84,7 +86,7 @@ public class LoginLayout extends VerticalLayout{
         registerButton.addListener(new Button.ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
-                Root.getCurrent().setContent(new BaseLayout(new RegisterLayout(ejbAccess, new User())));
+                Root.getCurrent().setContent(new BaseLayout(ejbAccess, new MainLayout(ejbAccess, new UserEditLayout(ejbAccess, new User()))));
             }
         });
 

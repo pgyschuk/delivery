@@ -1,35 +1,41 @@
 package com.dkord.pages.admin;
 
 import com.dkord.EJBAccessLocal;
-import com.vaadin.navigator.View;
+import com.dkord.pages.Configuration;
+import com.vaadin.Application;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Panel;
+import com.vaadin.ui.Root;
 import com.vaadin.ui.VerticalLayout;
+import org.springframework.security.core.Authentication;
 
 /**
  *
  * @author Peter Gyschuk
  */
-public class AdminLayout extends VerticalLayout implements View {
+public class MainLayout extends VerticalLayout {
 
-    Configuration currentConfiguration;
-    public AdminLayout(final EJBAccessLocal ejbAccess) {
+    public MainLayout(final EJBAccessLocal ejbAccess, final Configuration configuration) {
         super();
-        final Panel adminPanel = new Panel();
+        final Panel mainPanel = new Panel();
         HorizontalLayout horizontalLayout = new HorizontalLayout();
         horizontalLayout.setSpacing(true);
-        adminPanel.setCaption("Admin panel");
-        adminPanel.setWidth("900px");
+        mainPanel.setCaption("Delivery");
+        mainPanel.setWidth("900px");
         Panel menuPanel = new Panel();
         menuPanel.setCaption("Menu");
         menuPanel.setWidth("200px");
         final Panel contentPanel = new Panel();
-        contentPanel.setCaption("Options");
+        contentPanel.setCaption(configuration.getName());
         contentPanel.setWidth("660px");
-        horizontalLayout.addComponent(menuPanel);
+        contentPanel.addComponent(configuration);
+        final Authentication authentication = (Authentication) Application.getCurrent().getUser();
+        if (authentication != null) {
+            horizontalLayout.addComponent(menuPanel);
+        }
         horizontalLayout.addComponent(contentPanel);
 
         VerticalLayout userAction = new VerticalLayout();
@@ -38,31 +44,26 @@ public class AdminLayout extends VerticalLayout implements View {
         saveButton.addListener(new Button.ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
-                currentConfiguration.save();
+                configuration.save();
             }
         });
-        
+
         Button assignRoleButton = new Button("Assign role");
         assignRoleButton.addStyleName("link");
         assignRoleButton.addListener(new Button.ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
-                RolesLayout layout = new RolesLayout(ejbAccess);
-                currentConfiguration = layout;
-                contentPanel.setContent(layout);
+                MainLayout adminLayout = new MainLayout(ejbAccess, new RolesLayout(ejbAccess));
+                Root.getCurrent().setContent(new BaseLayout(ejbAccess, adminLayout));
             }
         });
         userAction.addComponent(assignRoleButton);
 
         menuPanel.addComponent(userAction);
-        adminPanel.addComponent(horizontalLayout);
-        adminPanel.addComponent(saveButton);
-        addComponent(adminPanel);
-        setComponentAlignment(adminPanel, Alignment.MIDDLE_CENTER);
+        mainPanel.addComponent(horizontalLayout);
+        mainPanel.addComponent(saveButton);
+        addComponent(mainPanel);
+        setComponentAlignment(mainPanel, Alignment.MIDDLE_CENTER);
         setMargin(true);
-    }
-
-    @Override
-    public void navigateTo(String fragmentParameters) {
     }
 }

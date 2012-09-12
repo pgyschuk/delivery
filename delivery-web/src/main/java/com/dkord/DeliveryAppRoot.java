@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.dkord;
 
 import com.dkord.pages.admin.BaseLayout;
@@ -24,7 +20,7 @@ public class DeliveryAppRoot extends Root {
     
     @Override
     protected void init(WrappedRequest request) {
-        setContent(new BaseLayout(new LoginLayout(ejbAccess)) );
+        setContent(new BaseLayout(ejbAccess, new LoginLayout(ejbAccess)) );
         setSizeFull();
     }
 }
