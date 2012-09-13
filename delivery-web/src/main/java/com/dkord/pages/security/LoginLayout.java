@@ -1,12 +1,12 @@
 package com.dkord.pages.security;
 
-import com.dkord.pages.UserEditLayout;
+import com.dkord.pages.UserContactsLayout;
 import com.dkord.EJBAccessLocal;
 import com.dkord.datamodel.Role;
 import com.dkord.datamodel.User;
-import com.dkord.pages.admin.MainLayout;
-import com.dkord.pages.admin.BaseLayout;
-import com.dkord.pages.admin.RolesLayout;
+import com.dkord.pages.MainLayout;
+import com.dkord.pages.BaseLayout;
+import com.dkord.pages.UserEditLayout;
 import com.vaadin.Application;
 import com.vaadin.data.validator.AbstractStringValidator;
 import com.vaadin.data.validator.EmailValidator;
@@ -71,7 +71,7 @@ public class LoginLayout extends VerticalLayout {
                         SecurityContextHolder.getContext().setAuthentication(returned);
                         LOGGER.info("User {} was authenticated", new Object[]{email.getValue()});
                         if (returned.getAuthorities().contains(ejbAccess.getRolesService().getRole(Role.Authority.ROLE_ADMIN))) {
-                            Root.getCurrent().setContent(new BaseLayout(ejbAccess, new MainLayout(ejbAccess, new RolesLayout(ejbAccess))));
+                            Root.getCurrent().setContent(new BaseLayout(ejbAccess, new MainLayout(ejbAccess, new UserEditLayout(ejbAccess))));
                         }
                     } catch (Exception e) {
                         LOGGER.error("User {} was NOT authenticated", new Object[]{email.getValue()});
@@ -86,7 +86,13 @@ public class LoginLayout extends VerticalLayout {
         registerButton.addListener(new Button.ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
-                Root.getCurrent().setContent(new BaseLayout(ejbAccess, new MainLayout(ejbAccess, new UserEditLayout(ejbAccess, new User()))));
+                Root.getCurrent().setContent(new BaseLayout(ejbAccess, new MainLayout(ejbAccess, new UserContactsLayout(ejbAccess, new User()) {
+                    @Override
+                    public void save() {
+                        super.save();
+                        Root.getCurrent().setContent(new BaseLayout(ejbAccess, new LoginLayout(ejbAccess)));
+                    }
+                })));
             }
         });
 

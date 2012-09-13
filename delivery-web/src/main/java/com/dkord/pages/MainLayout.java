@@ -1,5 +1,6 @@
-package com.dkord.pages.admin;
+package com.dkord.pages;
 
+import com.dkord.pages.BaseLayout;
 import com.dkord.EJBAccessLocal;
 import com.dkord.pages.Configuration;
 import com.vaadin.Application;
@@ -53,7 +54,7 @@ public class MainLayout extends VerticalLayout {
         assignRoleButton.addListener(new Button.ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
-                MainLayout adminLayout = new MainLayout(ejbAccess, new RolesLayout(ejbAccess));
+                MainLayout adminLayout = new MainLayout(ejbAccess, new UserEditLayout(ejbAccess));
                 Root.getCurrent().setContent(new BaseLayout(ejbAccess, adminLayout));
             }
         });

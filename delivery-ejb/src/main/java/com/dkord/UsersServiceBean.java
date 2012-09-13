@@ -32,8 +32,10 @@ public class UsersServiceBean implements UsersServiceLocal {
     private Md5PasswordEncoder passwordEncoder = new Md5PasswordEncoder();
 
     @Override
-    public void save(User user) {
-        entityManager.merge(user);
+    public User save(User user) {
+        user = entityManager.merge(user);
+        entityManager.persist(user);
+        return user;
     }
 
     @Override
@@ -48,18 +50,13 @@ public class UsersServiceBean implements UsersServiceLocal {
     }
 
     @Override
-    public User register(User user) {
-        entityManager.persist(user);
-        return user;
-    }
-
-    @Override
     public void addAuthority(User user, Role.Authority authority) {
+        user = entityManager.merge(user);
         Role role = rolesServiceBean.getRole(authority);
         Set<Role> roles = user.getRoles();
         roles.add(role);
         user.setRoles(roles);
-        entityManager.merge(user);
+        entityManager.persist(user);
     }
 
     @Override
@@ -71,5 +68,11 @@ public class UsersServiceBean implements UsersServiceLocal {
     public List<User> findAll() {
         List<User> users = entityManager.createNamedQuery("findAllUsers", User.class).getResultList();
         return users;
+    }
+
+    @Override
+    public void delete(User user) {
+        user = entityManager.merge(user);
+        entityManager.remove(user);
     }
 }

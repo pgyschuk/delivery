@@ -1,8 +1,8 @@
-package com.dkord.pages.admin;
+package com.dkord.pages;
 
 import com.dkord.EJBAccessLocal;
 import com.dkord.datamodel.User;
-import com.dkord.pages.UserEditLayout;
+import com.dkord.pages.UserContactsLayout;
 import com.dkord.pages.security.LoginLayout;
 import com.vaadin.Application;
 import com.vaadin.ui.AbstractOrderedLayout;
@@ -44,7 +44,7 @@ public class BaseLayout extends VerticalLayout {
             userButton.addListener(new Button.ClickListener() {
                 @Override
                 public void buttonClick(Button.ClickEvent event) {
-                    MainLayout adminLayout = new MainLayout(ejbAccess,new UserEditLayout(ejbAccess, user));
+                    MainLayout adminLayout = new MainLayout(ejbAccess,new UserContactsLayout(ejbAccess, user));
                     Root.getCurrent().setContent(new BaseLayout(ejbAccess, adminLayout));
                 }
             });

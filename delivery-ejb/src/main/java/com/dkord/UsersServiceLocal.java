@@ -16,13 +16,13 @@ import javax.ejb.Remote;
 @Remote
 public interface UsersServiceLocal {
 
-    void save(User user);
+    User save(User user);
+    
+    void delete(User user);
 
     User findByEmail(String email);
     
     boolean isPasswordValid(String encriptedPass, String plainTextPass);
-    
-    User register(User user);
     
     void addAuthority(User user, Role.Authority authority);
     

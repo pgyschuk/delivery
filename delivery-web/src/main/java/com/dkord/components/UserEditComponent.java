@@ -8,6 +8,7 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
 
 /**
@@ -24,7 +25,7 @@ public class UserEditComponent extends HorizontalLayout {
 
     private PasswordField retryPassword;
 
-    ContactsEditComponent contactsEditComponent;
+    private ContactsEditComponent contactsEditComponent;
 
     private Md5PasswordEncoder passwordEncoder = new Md5PasswordEncoder();
 
@@ -53,18 +54,18 @@ public class UserEditComponent extends HorizontalLayout {
 //        verticalLayout.addComponent(telephone);
 
         username = new TextField("Name", user.getName());
-        username.addValidator(new StringLengthValidator("Name is too short", 3, 50, false));
+        username.addValidator(new StringLengthValidator("Name mast be 3-50 characters", 3, 50, false));
         username.setWidth("100%");
 
-        password = new PasswordField("Password", user.getPassword());
+        password = new PasswordField("Password");
         password.addValidator(new StringLengthValidator("Password is too short", 0, 20, true));
         password.setWidth("100%");
 
-        retryPassword = new PasswordField("Retry Password", user.getPassword());
+        retryPassword = new PasswordField("Retry Password");
         retryPassword.addValidator(new AbstractStringValidator("Retry Password is not equal to Password") {
             @Override
             public void validate(Object value) throws InvalidValueException {
-                if (value == null || !value.equals(password.getValue())) {
+                if (!(StringUtils.isBlank((String)value) && StringUtils.isBlank(password.getValue())) || !value.equals(password.getValue())) {
                     throw new InvalidValueException("Retry Password is not equal to Password");
                 }
             }
@@ -85,7 +86,7 @@ public class UserEditComponent extends HorizontalLayout {
 
     public User getUser() {
         user.setName(username.getValue());
-        if (password.getValue() != null) {
+        if (StringUtils.isNotBlank(password.getValue())) {
             user.setPassword(passwordEncoder.encodePassword(password.getValue(), SALT));
         }
         user.setContacts(contactsEditComponent.getContacts());

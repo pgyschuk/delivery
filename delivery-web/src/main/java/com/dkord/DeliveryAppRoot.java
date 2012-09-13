@@ -1,6 +1,6 @@
 package com.dkord;
 
-import com.dkord.pages.admin.BaseLayout;
+import com.dkord.pages.BaseLayout;
 import com.dkord.pages.security.LoginLayout;
 import com.vaadin.terminal.WrappedRequest;
 import com.vaadin.ui.Root;
