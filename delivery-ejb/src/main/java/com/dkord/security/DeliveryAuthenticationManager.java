@@ -5,12 +5,7 @@
 package com.dkord.security;
 
 import com.dkord.UsersServiceLocal;
-import com.dkord.datamodel.Role;
 import com.dkord.datamodel.User;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -41,17 +36,8 @@ public class DeliveryAuthenticationManager implements DeliveryAuthenticationMana
             return new UsernamePasswordAuthenticationToken(
                     auth.getName(),
                     auth.getCredentials(),
-                    getAuthorities(user.getRoles()));
+                    user.getRoles());
         }
         throw new RuntimeException("User is not authenticated!");
-    }
-
-    public Collection<Role> getAuthorities(Set<Role> roles) {
-        List<Role> authList = new ArrayList<Role>();
-
-        for (Role role : roles) {
-            authList.add(role);
-        }
-        return authList;
     }
 }

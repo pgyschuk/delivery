@@ -2,7 +2,6 @@ package com.dkord.components;
 
 import com.dkord.datamodel.Contacts;
 import com.vaadin.data.validator.EmailValidator;
-import com.vaadin.ui.Button;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
@@ -44,26 +43,11 @@ public class ContactsEditComponent extends VerticalLayout {
         telephone = new TextField("Telephone", contacts.getTelephone());
         telephone.setWidth("100%");
 
-        Button addNewContactsButton = new Button("Add new Contacts");
-        addNewContactsButton.addStyleName("link");
-        addNewContactsButton.addListener(new Button.ClickListener() {
-            @Override
-            public void buttonClick(Button.ClickEvent event) {
-                setContacts(new Contacts());
-                city.setValue("");
-                email.setValue("");
-                number.setValue("");
-                street.setValue("");
-                telephone.setValue("");
-            }
-        });
-
         addComponent(city);
         addComponent(email);
         addComponent(number);
         addComponent(street);
         addComponent(telephone);
-        addComponent(addNewContactsButton);
     }
 
     public Contacts getContacts() {

@@ -24,7 +24,7 @@ import org.hibernate.annotations.NamedQuery;
 @Entity
 @Table(name = "Menus")
 @NamedQueries({
-    @NamedQuery(name = "findMenuByDate", query = "FROM Menu menu WHERE menu.validDate = :validDate")
+    @NamedQuery(name = "findMenuByDate", query = "FROM Menu menu WHERE menu.validFromDate = :validFromDate AND menu.validToDate = :validToDate")
 })
 public class Menu implements Serializable {
 
@@ -35,7 +35,11 @@ public class Menu implements Serializable {
 
     @Column
     @Temporal(javax.persistence.TemporalType.DATE)
-    private Date validDate;
+    private Date validFromDate;
+    
+    @Column
+    @Temporal(javax.persistence.TemporalType.DATE)
+    private Date validToDate;
 
     @ManyToMany(targetEntity = Role.class, fetch = FetchType.EAGER)
     @JoinTable(name = "menu_dish", joinColumns = {
@@ -54,12 +58,20 @@ public class Menu implements Serializable {
         this.id = id;
     }
 
-    public Date getValidDate() {
-        return validDate;
+    public Date getValidFromDate() {
+        return validFromDate;
     }
 
-    public void setValidDate(Date validDate) {
-        this.validDate = validDate;
+    public void setValidFromDate(Date validFromDate) {
+        this.validFromDate = validFromDate;
+    }
+
+    public Date getValidToDate() {
+        return validToDate;
+    }
+
+    public void setValidToDate(Date validToDate) {
+        this.validToDate = validToDate;
     }
 
     public Set<Dish> getDishes() {

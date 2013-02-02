@@ -7,13 +7,13 @@ package com.dkord;
 import com.dkord.datamodel.Role;
 import com.dkord.datamodel.User;
 import java.util.List;
-import javax.ejb.Remote;
+import javax.ejb.Local;
 
 /**
  *
  * @author Peter Gyschuk
  */
-@Remote
+@Local
 public interface UsersServiceLocal {
 
     User save(User user);

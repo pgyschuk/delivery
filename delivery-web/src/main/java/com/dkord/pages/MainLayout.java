@@ -54,11 +54,23 @@ public class MainLayout extends VerticalLayout {
         assignRoleButton.addListener(new Button.ClickListener() {
             @Override
             public void buttonClick(ClickEvent event) {
-                MainLayout adminLayout = new MainLayout(ejbAccess, new UserEditLayout(ejbAccess));
-                Root.getCurrent().setContent(new BaseLayout(ejbAccess, adminLayout));
+                MainLayout userEditLayout = new MainLayout(ejbAccess, new UserEditLayout(ejbAccess));
+                Root.getCurrent().setContent(new BaseLayout(ejbAccess, userEditLayout));
             }
         });
+        
+        Button editCateringProviderButton = new Button("Edit Catering Provider");
+        editCateringProviderButton.addStyleName("link");
+        editCateringProviderButton.addListener(new Button.ClickListener() {
+            @Override
+            public void buttonClick(ClickEvent event) {
+                MainLayout cateringProviderEditLayout = new MainLayout(ejbAccess, new CateringProviderEditLayout(ejbAccess));
+                Root.getCurrent().setContent(new BaseLayout(ejbAccess, cateringProviderEditLayout));
+            }
+        });
+        
         userAction.addComponent(assignRoleButton);
+        userAction.addComponent(editCateringProviderButton);
 
         menuPanel.addComponent(userAction);
         mainPanel.addComponent(horizontalLayout);

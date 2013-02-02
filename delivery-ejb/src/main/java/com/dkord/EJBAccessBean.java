@@ -34,6 +34,9 @@ public class EJBAccessBean implements EJBAccessLocal {
     @EJB
     private BlackboardLocal blackboard;
 
+    @EJB
+    private CateringProviderLocal cateringProviderService;
+
     @Resource
     SessionContext context;
 
@@ -65,5 +68,10 @@ public class EJBAccessBean implements EJBAccessLocal {
     @Override
     public SessionContext getContext() {
         return context;
+    }
+
+    @Override
+    public CateringProviderLocal getCateringProviderService() {
+        return cateringProviderService;
     }
 }

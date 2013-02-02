@@ -17,7 +17,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
@@ -57,7 +57,7 @@ public class User implements Serializable {
     @Column
     private float account;
     
-    @ManyToOne(cascade= CascadeType.ALL)
+    @OneToOne(cascade= CascadeType.ALL)
     private Contacts contacts;
 
     public User(String name, String password) {

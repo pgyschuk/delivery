@@ -28,4 +28,6 @@ public interface EJBAccessLocal {
     public BlackboardLocal getBlackboard();
 
     public SessionContext getContext();
+    
+    public CateringProviderLocal getCateringProviderService();
 }
